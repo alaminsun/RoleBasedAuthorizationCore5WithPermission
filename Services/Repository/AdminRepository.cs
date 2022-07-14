@@ -82,21 +82,21 @@ namespace RoleBasedAuthorizationCore5.Services.Repository
         {
                 int MaxID = _iDGenerated.getMAXSLFIN("admins", "id");
 
-                var query = "INSERT INTO admins (Id, full_name, email, password, roles_id) VALUES (" + MaxID + ",'" + admins.FullName + "','" + admins.Email + "','" + admins.Password + "'," + admins.RolesId + ")";
+                var query = "INSERT INTO admins (Id, full_name, email, username, password, roles_id) VALUES (" + MaxID + ",'" + admins.FullName + "','" + admins.Email + "','" + admins.Username + "','" + admins.Password + "'," + admins.RolesId + ")";
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     connection.Open();
-                var id = await connection.ExecuteAsync(query);
+                await connection.ExecuteAsync(query);
 
                 var adminDTO = new Admins
                 {
-                    Id = id,
+                    //Id = id,
                     FullName = admins.FullName,
                     Email = admins.Email,
+                    Username = admins.Username,
                     Password = admins.Password,
                     RolesId = admins.RolesId
                 };
-                await connection.ExecuteAsync(query);
 
                  return adminDTO;
                 }

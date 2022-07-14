@@ -48,7 +48,7 @@ namespace RoleBasedAuthorization.Controllers
                 vm.Roles = await _adminInfo.GetRolesById(item.RolesId);
                 vmList.Add(vm);
             }
-            return View(vmList);
+            return View(vmList);      
             //return View( await myDbContext.ToListAsync());
             //return View(admins);
         }
@@ -137,22 +137,45 @@ namespace RoleBasedAuthorization.Controllers
 
             var roles = await _adminInfo.GetRoles();
             ViewData["RolesId"] = new SelectList(roles, "Roles_Master_Id", "Title", admins.RolesId);
-            return View(admins);
+            //return View(admins);
+            return Json(admins);
         }
 
 
-        [HttpGet]
-        public JsonResult CheckUsernameAvailability(string username)
-        {
-            //int roleId = (int)HttpContext.Session.GetInt32("role_id");
-            var userName = IsUsernameExistAsync(username);
-            return Json(data: userName);
-        }
+        //[HttpPost]
+        //public JsonResult CheckUsernameAvailability(string username)
+        //{
+        //    //int roleId = (int)HttpContext.Session.GetInt32("role_id");
+        //    var userName = IsUsernameExistAsync(username);
+        //    return Json(data: userName);
+        //}
 
+        [AcceptVerbs("GET", "POST")]
+        public async Task<IActionResult> CheckUsernameAvailability(string username)
+       {
+            if (await IsUsernameExistAsync(username))
+            {
+                return Json($"A user named {username} already exists.");
+            }
+
+            return Json(true);
+        }
+        //private async Task<int> IsUsernameExistAsync(string username)
+        //{
+        //    var query = "Select username from admins Where username = '" + username + "'";
+        //    using (var connection = new SqlConnection(_connectionString))
+        //    {
+        //        connection.Open();
+        //        var result = await connection.ExecuteAsync(query);
+        //        return result;
+        //    }
+
+
+        //}
         private async Task<bool> IsUsernameExistAsync(string username)
         {
             bool IsTrue = false;
-            var query = "Select username from admins Where username = '"+ username + "'";
+            var query = "Select username from admins Where username = '" + username + "'";
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -204,8 +227,8 @@ namespace RoleBasedAuthorization.Controllers
             //admin.RolesId = admins.RolesId;
             //await _context.SaveChangesAsync();
             await _adminInfo.UpdateAdmin(admins);
-
-            return RedirectToAction(nameof(Index));
+            return Json(admins);
+            //return RedirectToAction(nameof(Index));
         }
 
         //GET: Admins/Delete/5
