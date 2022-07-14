@@ -1,0 +1,153 @@
+﻿@model IEnumerable<RoleBasedAuthorization.Models.Admins>
+
+@{ ViewData["Title"] = "Admins";
+                Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        @ViewData["Title"]
+    </h1>
+</section>
+<!-- Main content -->
+<section class="content container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Admins Table</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="example2" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Username)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Roles.Title)
+                    </td>
+                    <td>
+                        @*<a id="btnEdit" href="/Admins/Edit/@item.Id">Edit</a> |*@
+                        <a href="/Admins/Edit/@item.Id">
+                            <button class="btn btn-primary" id="btnEdit">Edit</button> |
+                        </a>
+                        <!--<a href="/Admins/Delete/@item.Id">
+        <button class="btn btn-danger" id="btnDelete">Delete</button>-->
+                        @*<button class="btn btn-primary" id="btnEdit">Edit</button> |*@
+                        <!--</a>-->
+                        @*<a href="#myModal" data-toggle="modal" value="@item.Id" class="btn btn-danger">Delete</a>*@
+                        <a id="deleteItem" class="deleteItem btn btn-danger" data-target="#myModal"
+                           data-toggle="modal"
+                           data-path="@Url.Action("DeleteConfirmed", "Admins", new { id = @item.Id })">Delete</a>
+                    </td>
+                </tr>
+                }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--<div class="text-center">-->
+    <!-- Button HTML (to Trigger Modal) -->
+    <!--<a href="#myModal" class="trigger-btn" data-toggle="modal">Click to Open Confirm Modal</a>
+</div>-->
+
+<!-- Modal HTML -->
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header flex-column">
+                @*<div class="icon-box">
+                    <i class="material-icons">&#xE5CD;</i>
+                </div>*@
+                <h4 class="modal-title w-100">Are you sure?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Do you really want to delete these records? This process cannot be undone.</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" id="btnDelete" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#example2').DataTable({
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': true,
+            'info': true,
+            'autoWidth': false
+        })
+    })
+
+
+    var path_to_delete;
+
+    $(".deleteItem").click(function (e) {
+        path_to_delete = $(this).data('path');
+        alert(path_to_delete);
+    });
+
+    $("#btnDelete").click(function () {
+        window.location = path_to_delete;
+    });
+
+    $(document).ready(function () {
+        EventPermission();
+        function EventPermission() {
+            $.ajax({
+                url: "/Admins/EventPermission",
+                type: 'GET',
+                dataType: 'JSON',
+                data: "{}",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    console.log(data);
+                    if (data != "") {
+                        $.each(data, function (i, item) {
+                            console.log(item.deletePermission);
+                            $("#btnEdit").attr("disabled", item.editPermission == false ? true : false);
+                            $("#btnSave").attr("disabled", item.savePermission == false ? true : false);
+                            $("#btnView").attr("disabled", item.viewPermission == false ? true : false);
+                            $("#btnDelete").attr("disabled", item.deletePermission == false ? true : false);
+
+                        });
+                    }
+
+                }
+            }); //End of ajax call
+        }
+    });
+</script>
