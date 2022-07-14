@@ -59,7 +59,7 @@
                         @*<button class="btn btn-primary" id="btnEdit">Edit</button> |*@
                         <!--</a>-->
                         @*<a href="#myModal" data-toggle="modal" value="@item.Id" class="btn btn-danger">Delete</a>*@
-                        <a id="deleteItem" class="deleteItem btn btn-danger" data-target="#myModal"
+                        <a id="btnRowDelete_@item.Id" class="deleteItem btn btn-danger" data-target="#myModal"
                            data-toggle="modal"
                            data-path="@Url.Action("DeleteConfirmed", "Admins", new { id = @item.Id })">Delete</a>
                     </td>
