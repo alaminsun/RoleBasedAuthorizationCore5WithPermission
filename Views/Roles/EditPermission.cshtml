@@ -23,7 +23,7 @@
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
-                <form id="create-form">
+                <form id="edit-permission-form">
                     <div class="box-body">
                         <div class="form-group">
                             <label for="Title">Title</label>
@@ -284,7 +284,7 @@
         //    alert("Checkbox state (method 2) = " + $('#View_1').is(':checked'));
         //});
 
-        $("#create-form").submit(function (event) {
+        $("#edit-permission-form").submit(function (event) {
             //alert('ok')
             //var isOK = ValidateEditForm();
             var row = $("#permissionTable tbody tr").length;
@@ -344,7 +344,7 @@
 
             $.ajax({
                 type: "POST",
-                url: '@Url.Action("Create", "Roles")',
+                url: '@Url.Action("EditPermission", "Roles")',
                 data: formData,
                 dataType: "json",
                 encode: true,

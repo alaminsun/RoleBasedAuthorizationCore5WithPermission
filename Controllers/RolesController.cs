@@ -214,7 +214,8 @@ namespace RoleBasedAuthorization.Controllers
                 await _rolesInfo.CreateRoles(roles);
                 return RedirectToAction(nameof(Index));
             }
-            return View(roles);
+            //return View(roles);
+            return Json(roles);
         }
 
 
@@ -247,6 +248,22 @@ namespace RoleBasedAuthorization.Controllers
             //ViewBag.menu = unorderedList;
 
             return View(roles);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> EditPermission(int id, Roles roles)
+        {
+
+            if (ModelState.IsValid)
+            {
+                //_context.Add(roles);
+                await _rolesInfo.DeletePermisionWithRoleIdAsync(id);
+                await _rolesInfo.UpdateRoleWithPermission(id,roles);
+                //return RedirectToAction(nameof(Index));
+            }
+            //return View(roles);
+            return Json(roles);
         }
 
         // GET: Roles/Edit/5

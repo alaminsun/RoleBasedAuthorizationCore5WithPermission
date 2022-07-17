@@ -50,5 +50,31 @@ namespace RoleBasedAuthorizationCore5.Controllers
             return View(menus);
         }
 
+        public async Task<IActionResult> Edit(int? id)
+        {
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            //var admins = await _context.Admins.SingleOrDefaultAsync(m => m.Id == id);
+            var menus = await _menuInfo.GetMenuById(id);
+            if (menus == null)
+            {
+                return NotFound();
+            }
+            var parentMenus = await _menuInfo.GetParentMenusByParent(menus.ParentId);
+            //var parentMenus = await _menuInfo.GetParentMenus();
+            int ParentId = await _menuInfo.GetParentIdBy(menus.Url, menus.ParentId, menus.Name);
+            //ViewBag.ParentId = new SelectList(parentMenus, "Id", "Name");
+            ViewData["ParentId"] = new SelectList(parentMenus, "Id", "Name", ParentId);
+            //var roles = await _menuInfo.GetRoles();
+            //ViewData["RolesId"] = new SelectList(roles, "Roles_Master_Id", "Title", admins.RolesId);
+            //ViewData["RolesId"] = new SelectList(_context.Roles, "Id", "Title", admins.RolesId);
+            return View(menus);
+        }
+
+
     }
 }

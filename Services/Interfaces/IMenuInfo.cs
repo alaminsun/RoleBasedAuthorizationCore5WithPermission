@@ -12,5 +12,8 @@ namespace RoleBasedAuthorizationCore5.Services.Interfaces
         Task<List<Menus>> GetMenus();
         Task<Menus> CreateMenus(Menus menus);
         Task<List<Menus>> GetParentMenus();
+        Task<Menus> GetMenuById(int? id);
+        Task<List<Menus>> GetParentMenusByParent(int parentId);
+        Task<int> GetParentIdBy(string url, int parentId, string name);
     }
 }

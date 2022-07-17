@@ -183,5 +183,63 @@ namespace RoleBasedAuthorizationCore5.Services.Repository
 
             }
         }
+
+        public async Task<int> DeletePermisionWithRoleIdAsync(int? id)
+        {
+            string query = "Delete From RoleWisePermission Where RoleId= "+id+"";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+               var result = await connection.QuerySingleOrDefaultAsync<int>(query);
+                return result;
+            }
+             
+        }
+
+        public async Task<Roles>UpdateRoleWithPermission(int id, Roles roles)
+        {
+            //int MaxID = _iDGenerated.getMAXSLFIN("roles", "id");
+
+            var query = "Update roles Set Title = '"+roles.Title+ "', description = '"+roles.Description+"' Where id = "+id+"";
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var Id = await connection.ExecuteAsync(query);
+                if (Id > 0)
+                {
+                    foreach (var detail in roles.RolesDetails)
+                    {
+                        if (detail.Roles_Detail_Id == 0)
+                        {
+                            detail.Roles_Detail_Id = _iDGenerated.getMAXSLFIN("RoleWisePermission", "Id");
+                            var queryDetail = "INSERT INTO RoleWisePermission (Id, RoleId, MenuId, MenuName, Url, ViewPermission, CreatePermission, UpdatePermission, DeletePermission) VALUES (" + detail.Roles_Detail_Id + "," + id + "," + detail.MenuId + ", '" + detail.MenuName + "', '" + detail.Url + "', '" + detail.View + "','" + detail.Create + "', '" + detail.Edit + "', '" + detail.Delete + "')";
+                            await connection.ExecuteAsync(queryDetail);
+
+                        }
+                        else
+                        {
+                            var queryDelete = "Delete From RoleWisePermission Where RoleId= " + id + "";
+                            await connection.ExecuteAsync(queryDelete);
+                            var queryDetail = "INSERT INTO RoleWisePermission (Id, RoleId, MenuId, MenuName, Url, [View], [Create], [Update], [Delete]) VALUES (" + detail.Roles_Detail_Id + "," + detail.RolesId + "," + detail.MenuId + ", " + detail.MenuName + ", '" + detail.Url + "', " + detail.View + "," + detail.Create + ", " + detail.Edit + ", " + detail.Delete + ")";
+                            await connection.ExecuteAsync(queryDetail);
+                        }
+
+                    }
+
+                }
+                var roleDTO = new Roles
+                {
+                    Roles_Master_Id = id,
+                    Title = roles.Title,
+                    Description = roles.Description,
+                    RolesDetails = roles.RolesDetails
+
+                };
+                //await connection.ExecuteAsync(query);
+
+                return roleDTO;
+            }
+        }
     }
 }

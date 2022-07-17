@@ -71,5 +71,42 @@ namespace RoleBasedAuthorizationCore5.Services.Repository
                 return menuDTO;
             }
         }
+
+        public async Task<Menus>GetMenuById(int? id)
+        {
+            //string query = "Select id,full_name fullname,email,password,roles_id RolesId, username Username From admins where id = " + Id + "";
+            //string query = "Select * From [Identity].Users Where UserName = '" + username + "'";
+            string query = "Select Id, name, icon, url, parent_id ParentId From menus Where id= " + id + "";
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var result = await connection.QuerySingleOrDefaultAsync<Menus>(query);
+                return result;
+            }
+        }
+
+        public async Task<List<Menus>> GetParentMenusByParent(int parentId)
+        {
+            string query = "Select Id, name, icon, url, parent_id ParentId From menus Where parent_id="+parentId+"";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var result = await connection.QueryAsync<Menus>(query);
+                return result.ToList();
+            }
+        }
+
+        public async Task<int> GetParentIdBy(string url, int parentId, string name)
+        {
+            string query = "Select Id, name, icon, url, parent_id ParentId From menus Where parent_id=" + parentId + " and url = '"+ url + "' and name = '"+ name +"'";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var result = await connection.QuerySingleOrDefaultAsync<int>(query);
+                return result;
+            }
+        }
     }
 }

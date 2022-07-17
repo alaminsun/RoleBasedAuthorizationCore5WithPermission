@@ -480,3 +480,4 @@ G:\Project\RoleBasedAuthorizationCore5WithPermission\bin\Debug\net5.0\zh-Hant\Mi
 G:\Project\RoleBasedAuthorizationCore5WithPermission\obj\Debug\net5.0\RoleBasedAuthorizationCore5.MvcApplicationPartsAssemblyInfo.cs
 G:\Project\RoleBasedAuthorizationCore5WithPermission\obj\Debug\net5.0\Razor\Views\Roles\EditPermission.cshtml.g.cs
 G:\Project\RoleBasedAuthorizationCore5WithPermission\obj\Debug\net5.0\RoleBasedAuthorizationCore5.csproj.AssemblyReference.cache
+G:\Project\RoleBasedAuthorizationCore5WithPermission\obj\Debug\net5.0\Razor\Views\Menu\Edit.cshtml.g.cs

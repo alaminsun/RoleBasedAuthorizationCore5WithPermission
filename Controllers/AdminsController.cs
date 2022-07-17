@@ -215,6 +215,7 @@ namespace RoleBasedAuthorization.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Admins admins)
+        
         {
             if (id != admins.Id)
             {

@@ -17,5 +17,7 @@ namespace RoleBasedAuthorizationCore5.Services.Interfaces
         Task<List<LinkRolesMenus>> GetLinkMenuByRole(int id);
         void DeleteAsync(LinkRolesMenus item);
         void AddAsync(int role, int id);
+        Task<int> DeletePermisionWithRoleIdAsync(int? id);
+        Task<Roles> UpdateRoleWithPermission(int id, Roles roles);
     }
 }
